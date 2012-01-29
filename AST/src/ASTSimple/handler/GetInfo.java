@@ -17,6 +17,7 @@ import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
+import org.eclipse.jdt.core.dom.MethodInvocation;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 public class GetInfo extends AbstractHandler {
@@ -39,19 +40,30 @@ public class GetInfo extends AbstractHandler {
 							for (ICompilationUnit unit : mypackage.getCompilationUnits()){
 								// Agora crie o AST para o ICompilationUnits
 								CompilationUnit parse = parse(unit);
+								
 								ClassVisitor classVisitor = new ClassVisitor();
 								DeclarationVisitor declarationVisitor = new DeclarationVisitor();
 								MethodVisitor methodVisitor = new MethodVisitor();
+								MethodInvocationVisitor methodInvocationVisitor = new MethodInvocationVisitor();
+								
 								parse.accept(classVisitor);
 								parse.accept(declarationVisitor);
 								parse.accept(methodVisitor);
+								parse.accept(methodInvocationVisitor);
+								
 								for (TypeDeclaration classe : classVisitor.getClasses()){
-									System.out.println("\n\nNome da classe: " + classe.getName() + "Super classe: " + classe.getSuperclassType());
+									//System.out.println("\n\nNome da classe: " + classe.getName());// + "Super classe: " + classe.getSuperclassType() + " Teste"+classe.superInterfaceTypes() + " teste 2: " + classe.isInterface() + " teste 3: ");
+									if(classe.modifiers().size() >= 2){
+										//System.out.println("teste" + classe.modifiers().get(1));
+									}
 									for(FieldDeclaration declaration : declarationVisitor.getDeclarations()){
-										System.out.println("Tipo variavel : " + declaration.getType());
+										//System.out.println("Tipo variavel : " + declaration.getType());
+									}
+									for(MethodInvocation methodInvocation : methodInvocationVisitor.getMethodsInvocations()){
+										//System.out.println("Metodo invocado : " + methodInvocation.getName() + " tetste: ");
 									}
 									for (MethodDeclaration method : methodVisitor.getMethods()){
-										System.out.println("\n\nNome do metodo: " + method.getName() + " \nTipo de retorno do metodo: " + method.getReturnType2() + "\nParametro do metodo: " + method.parameters());
+										//System.out.println("\n\nNome do metodo: " + method.getName());// + " \nTipo de retorno do metodo: " + method.getReturnType2() + "\nParametro do metodo: " + method.parameters() + " Test: " + method.isConstructor());
 									}
 								}
 							}
