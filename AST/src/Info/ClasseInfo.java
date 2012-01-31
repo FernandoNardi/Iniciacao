@@ -12,10 +12,10 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
 public class ClasseInfo {
 	
 	private TypeDeclaration classDeclaration;
-	List<MethodDeclaration> methodDeclaration = new ArrayList<MethodDeclaration>();
-	List<FieldDeclaration> fieldDeclaration = new ArrayList<FieldDeclaration>();
-	List<MethodInvocation> methodInvocation = new ArrayList<MethodInvocation>();
-	List<Aresta> aresta = new ArrayList<Aresta>();
+	private List<MethodDeclaration> methodDeclaration;
+	private List<FieldDeclaration> fieldDeclaration;
+	private List<MethodInvocation> methodInvocation;
+	private List<Aresta> aresta = new ArrayList<Aresta>();
 	
 	public ClasseInfo(){} //Construtor default
 	
@@ -56,5 +56,13 @@ public class ClasseInfo {
 
 	public void setMethodInvocation(List<MethodInvocation> methodInvocation) {
 		this.methodInvocation = methodInvocation;
+	}
+	
+	public List<Aresta> getAresta() {
+		return aresta;
+	}
+
+	public void setAresta(List<Aresta> aresta) {
+		this.aresta = aresta;
 	}
 }

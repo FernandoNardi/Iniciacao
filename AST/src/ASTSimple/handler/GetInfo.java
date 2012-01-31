@@ -1,5 +1,10 @@
 package ASTSimple.handler;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import Info.*;
+
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -21,8 +26,15 @@ import org.eclipse.jdt.core.dom.MethodInvocation;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 public class GetInfo extends AbstractHandler {
-	@Override
+	
+	private List<ClasseInfo> no = new ArrayList<ClasseInfo>();
+	private TypeDeclaration classeDeclaration;
+	private List<MethodDeclaration> metodoDeclaration;
+	private List<FieldDeclaration> fieldDeclaration;
+	private List<MethodInvocation> metodoInvocation;
+	
 	public Object execute(ExecutionEvent event) throws ExecutionException {
+		
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		IWorkspaceRoot root = workspace.getRoot();
 		
@@ -51,20 +63,29 @@ public class GetInfo extends AbstractHandler {
 								parse.accept(methodVisitor);
 								parse.accept(methodInvocationVisitor);
 								
+								metodoDeclaration = new ArrayList<MethodDeclaration>();
+								fieldDeclaration = new ArrayList<FieldDeclaration>();
+								metodoInvocation = new ArrayList<MethodInvocation>();
+								
 								for (TypeDeclaration classe : classVisitor.getClasses()){
-									//System.out.println("\n\nNome da classe: " + classe.getName());// + "Super classe: " + classe.getSuperclassType() + " Teste"+classe.superInterfaceTypes() + " teste 2: " + classe.isInterface() + " teste 3: ");
+									System.out.println("\n\nNome da classe: " + classe.getName() + "  Super classe: " + classe.getSuperclassType() + "  Interface implemets: "+ classe.superInterfaceTypes() + "  teste 2: " + classe.isInterface());
 									if(classe.modifiers().size() >= 2){
 										//System.out.println("teste" + classe.modifiers().get(1));
 									}
+									classeDeclaration = classe;
 									for(FieldDeclaration declaration : declarationVisitor.getDeclarations()){
 										//System.out.println("Tipo variavel : " + declaration.getType());
+										fieldDeclaration.add(declaration);
 									}
 									for(MethodInvocation methodInvocation : methodInvocationVisitor.getMethodsInvocations()){
 										//System.out.println("Metodo invocado : " + methodInvocation.getName() + " tetste: ");
+										metodoInvocation.add(methodInvocation);
 									}
 									for (MethodDeclaration method : methodVisitor.getMethods()){
 										//System.out.println("\n\nNome do metodo: " + method.getName());// + " \nTipo de retorno do metodo: " + method.getReturnType2() + "\nParametro do metodo: " + method.parameters() + " Test: " + method.isConstructor());
+										metodoDeclaration.add(method);
 									}
+									no.add(new ClasseInfo(classeDeclaration, metodoDeclaration, fieldDeclaration, metodoInvocation));
 								}
 							}
 						}
@@ -75,10 +96,9 @@ public class GetInfo extends AbstractHandler {
 				e.printStackTrace();
 			}
 		}
-		System.out.println("\n\n");
+	
 		return null;
 	}
-
 	
 /** * Reads a ICompilationUnit and creates the AST DOM for manipulating the * Java source file * * @param unit * @return */
 	private static CompilationUnit parse(ICompilationUnit unit) {
@@ -87,5 +107,20 @@ public class GetInfo extends AbstractHandler {
 		parser.setSource(unit);
 		parser.setResolveBindings(true);
 		return (CompilationUnit) parser.createAST(null); // parse
+	}
+	
+	private void arestas(){
+		int i = 0;
+		Aresta aresta;
+		while(i < no.size()){
+			if(this.no.get(i).getClassDeclaration().getSuperclassType() != null){
+				for(int j = 0; j < no.size(); ++j){
+					if(this.no.get(i).getClassDeclaration().getSuperclassType().equals(this.no.get(j).getClassDeclaration().getName()) && !this.no.get(i).getClassDeclaration().isInterface()){
+						aresta = new ArestaHeranca(this.no.get(i).getClassDeclaration().getSuperclassType().toString());
+					}
+				}
+			}
+			++i;
+		}
 	}
 }
