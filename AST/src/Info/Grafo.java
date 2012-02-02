@@ -1,21 +1,31 @@
 package Info;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Grafo {
 	
-	private ArrayList<ClasseInfo> grafo;
+	private List<ClasseInfo> grafo = new ArrayList<ClasseInfo>();
 	
-	public Grafo(ArrayList<ClasseInfo> grafo){
+	public Grafo(){}
+	
+	public Grafo(List<ClasseInfo> grafo){
 		this.grafo = grafo;
 	}
 
-	public ArrayList<ClasseInfo> getGrafo() {
+	public List<ClasseInfo> getGrafo() {
 		return grafo;
 	}
+	
+	public ClasseInfo getGrafo(int i) {
+		return this.grafo.get(i);
+	}
 
-	public void setGrafo(ArrayList<ClasseInfo> grafo) {
+	public void setGrafo(List<ClasseInfo> grafo) {
 		this.grafo = grafo;
 	}
 	
+	public void setGrafo(ClasseInfo nó) {
+		this.grafo.add(nó);
+	}
 }

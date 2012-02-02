@@ -13,21 +13,22 @@ public class ClasseInfo {
 	
 	private TypeDeclaration classDeclaration;
 	private List<MethodDeclaration> methodDeclaration;
-	private List<FieldDeclaration> fieldDeclaration;
+	//private List<FieldDeclaration> fieldDeclaration;
 	private List<MethodInvocation> methodInvocation;
-	private List<Aresta> aresta = new ArrayList<Aresta>();
+	private List<Aresta> arestas = new ArrayList<Aresta>();
 	
 	public ClasseInfo(){} //Construtor default
 	
-	public ClasseInfo(TypeDeclaration c, List<MethodDeclaration> m, List<FieldDeclaration> d, List<MethodInvocation> mi){
+	public ClasseInfo(TypeDeclaration c, List<MethodDeclaration> m, List<MethodInvocation> mi, List<Aresta> a){
 		setClassDeclaration(c);
 		setMethodDeclaration(m);
-		setFieldDeclaration(d);
+	//	setFieldDeclaration(d);
 		setMethodInvocation(mi);
+		setAresta(a);
 	}
 
 	public TypeDeclaration getClassDeclaration() {
-		return classDeclaration;
+		return this.classDeclaration;
 	}
 
 	public void setClassDeclaration(TypeDeclaration classDeclaration) {
@@ -35,23 +36,31 @@ public class ClasseInfo {
 	}
 
 	public List<MethodDeclaration> getMethodDeclaration() {
-		return methodDeclaration;
+		return this.methodDeclaration;
+	}
+	
+	public MethodDeclaration getMethodDeclaration(int i) {
+		return this.methodDeclaration.get(i);
 	}
 
 	public void setMethodDeclaration(List<MethodDeclaration> methodDeclaration) {
 		this.methodDeclaration = methodDeclaration;
 	}
-
+/*
 	public List<FieldDeclaration> getFieldDeclaration() {
-		return fieldDeclaration;
+		return this.fieldDeclaration;
 	}
 
 	public void setFieldDeclaration(List<FieldDeclaration> fieldDeclaration) {
 		this.fieldDeclaration = fieldDeclaration;
 	}
-
+*/
 	public List<MethodInvocation> getMethodInvocation() {
-		return methodInvocation;
+		return this.methodInvocation;
+	}
+	
+	public MethodInvocation getMethodInvocation(int i) {
+		return this.methodInvocation.get(i);
 	}
 
 	public void setMethodInvocation(List<MethodInvocation> methodInvocation) {
@@ -59,10 +68,14 @@ public class ClasseInfo {
 	}
 	
 	public List<Aresta> getAresta() {
-		return aresta;
+		return this.arestas;
 	}
 
 	public void setAresta(List<Aresta> aresta) {
-		this.aresta = aresta;
+		this.arestas = aresta;
+	}
+	
+	public void setAresta(Aresta aresta) {
+		this.arestas.add(aresta);
 	}
 }

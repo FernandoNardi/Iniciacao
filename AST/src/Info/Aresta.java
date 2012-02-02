@@ -1,6 +1,6 @@
 package Info;
 
-public class Aresta {
+public abstract class Aresta {
 	
 	private String nome;
 	

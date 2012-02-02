@@ -1,20 +1,21 @@
 package Info;
 
+import org.eclipse.jdt.core.dom.FieldDeclaration;
+
 public class ArestaAssociacao extends Aresta{
 	
-	private String nomeMetodo;
+	private FieldDeclaration variavel;
 	
-	public ArestaAssociacao(String tipoClasse, String nomeMetodo){
+	public ArestaAssociacao(String tipoClasse, FieldDeclaration variavel){
 		super(tipoClasse);
-		this.nomeMetodo = nomeMetodo;
+		this.variavel = variavel;
 	}
 
-	public String getNomeMetodo() {
-		return nomeMetodo;
+	public FieldDeclaration getNomeVariavel() {
+		return variavel;
 	}
 
-	public void setNomeMetodo(String nomeMetodo) {
-		this.nomeMetodo = nomeMetodo;
+	public void setNomeVariavel(FieldDeclaration nomeVariavel) {
+		this.variavel = nomeVariavel;
 	}
-	
 }
