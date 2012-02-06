@@ -26,13 +26,13 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 public class GetInfo extends AbstractHandler {
 	
-	private static Grafo grafo = new Grafo();
+	private static GrafoDiagramaDeClasse grafoDC = new GrafoDiagramaDeClasse();
+	private static GrafoDiagramaDeSequencia grafoDS = new GrafoDiagramaDeSequencia();
+	
 	private TypeDeclaration classeDeclaration;
 	private List<MethodDeclaration> metodoDeclaration;
-	//private List<FieldDeclaration> fieldDeclaration;
-	private List<MethodInvocation> metodoInvocation;
-	private List<ClassInstanceCreation> instanceCreation;
-	private List<Aresta> arestas;
+	private List<Aresta> arestasDC;
+	private List<Aresta> arestasDS;
 	
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		
@@ -67,64 +67,46 @@ public class GetInfo extends AbstractHandler {
 								parse.accept(instanceVisitor);
 								
 								metodoDeclaration = new ArrayList<MethodDeclaration>();
-								//fieldDeclaration = new ArrayList<FieldDeclaration>();
-								metodoInvocation = new ArrayList<MethodInvocation>();
-								instanceCreation = new ArrayList<ClassInstanceCreation>();
-								arestas = new ArrayList<Aresta>();
+								arestasDC = new ArrayList<Aresta>();
+								arestasDS = new ArrayList<Aresta>();
 								
-								for (TypeDeclaration classe : classVisitor.getClasses()){
-									System.out.println("\n\nNome da classe: " + classe.getName());// + "  Super classe: " + classe.getSuperclassType() + "  Interface implemets: "+ classe.superInterfaceTypes() + "  teste 2: " + classe.isInterface());
-									
+								for (TypeDeclaration classe : classVisitor.getClasses()){																
 									if(classe.getSuperclassType() != null){
-										arestas.add(new ArestaHeranca(classe.getSuperclassType().toString()));
+										arestasDC.add(new ArestaHeranca(classe.getSuperclassType().toString()));
 									}//aresta de herança -->>> extends
 									
 									int i = 0;
 									while(i < classe.superInterfaceTypes().size()){
-										arestas.add(new ArestaDeInterface(classe.superInterfaceTypes().get(i).toString()));
+										arestasDC.add(new ArestaDeInterface(classe.superInterfaceTypes().get(i).toString()));
 										++i;
 									}//aresta de inteface --->>> implements
 									
-									if(classe.modifiers().size() >= 2){
-										//System.out.println("teste" + classe.modifiers().get(1));
-									}
 									classeDeclaration = classe;
 									for(FieldDeclaration declaration : declarationVisitor.getDeclarations()){
-										//System.out.println("Tipo variavel : " + declaration.getType());
 										if(!declaration.getType().isPrimitiveType()){
 											if(!(declaration.getType().toString()).equals("String")){
-												//fieldDeclaration.add(declaration);
-												arestas.add(new ArestaAssociacao(declaration.getType().toString(), declaration));
+												arestasDC.add(new ArestaAssociacao(declaration.getType().toString(), declaration));
 											}
 										}
 									}// aresta de associação     
 									
 									for (MethodDeclaration method : methodVisitor.getMethods()){
-										//System.out.println("\n\nNome do metodo: " + method.getName());// + " \nTipo de retorno do metodo: " + method.getReturnType2() + "\nParametro do metodo: " + method.parameters() + " Test: " + method.isConstructor());
 										if(!method.isConstructor()){
 											metodoDeclaration.add(method);
 										}
 									}
 									
 									for(ClassInstanceCreation instanceCreation : instanceVisitor.getInstances()){
-										//System.out.println("\n\nInstanciação: " + instanceCreation.getType() + "Tipo (nome Classe): " + instanceCreation.resolveConstructorBinding().getName());
-										arestas.add(new ArestaDeInstancia(instanceCreation.getType().toString(), instanceCreation));
+										arestasDS.add(new ArestaDeInstancia(instanceCreation.getType().toString(), instanceCreation));
 									}
 									
 									for(MethodInvocation methodInvocation : methodInvocationVisitor.getMethodsInvocations()){
-										//System.out.println("Metodo invocado : " + methodInvocation.getName() + " Pertence à classe: " + methodInvocation.resolveMethodBinding().getDeclaringClass().getName());
-										
-										if(!methodInvocation.resolveMethodBinding().isVarargs()){
-											metodoInvocation.add(methodInvocation);
-										}
-										/*for(int j = 0; j < metodoDeclaration.size(); ++j){
-											if(metodoDeclaration.get(j).getName().equals(methodInvocation.getName())){
-												System.out.println("Metodo invocado : " + methodInvocation.getName() + " tetste: ");
-												arestas.add(new ArestaChamadaDeMetodo(metodoDeclaration.get(j).getName().toString(), methodInvocation));
-											}
-										}*/
+										arestasDS.add(new ArestaChamadaDeMetodo(methodInvocation.getName().toString(), methodInvocation));
 									}
-									grafo.setGrafo(new ClasseInfo(classeDeclaration, metodoDeclaration, metodoInvocation, arestas));
+									
+									grafoDC.setGrafo(new DiagramaDeClasse(classeDeclaration, metodoDeclaration, arestasDC));
+									grafoDS.setGrafo(new DiagramaDeSequencia(arestasDS));
+									
 								}
 							}
 						}
@@ -135,24 +117,15 @@ public class GetInfo extends AbstractHandler {
 				e.printStackTrace();
 			}
 		}
-		//testes
-		/*for(int i = 0; i < grafo.getGrafo().size(); ++i){
-			for(int j = 0; j < grafo.getGrafo(i).getFieldDeclaration().size(); ++j){
-				for(int t = 0; t < grafo.getGrafo(i).getMethodDeclaration().size(); ++t){
-					if((grafo.getGrafo(i).getFieldDeclaration(j).getType().toString()).equals(grafo.getGrafo(i).getMethodDeclaration(t).getName().toString())){
-						arestas.add(null);
-					}
-				}
+		
+		for(int i = 0; i < grafoDS.getGrafo().size(); ++i){
+			for(int j = 0; j < grafoDS.getGrafo(i).getArestas().size(); ++j){
+				//for(int t = 0; t < grafoDS.getGrafo(i).getArestas(t)){
+					System.out.println(grafoDS.getGrafo(i).getArestas(j).getObject());
+				//}
 			}
 		}
 		
-		for(int i = 0; i < grafo.getGrafo().size(); ++i){
-			if(grafo.getGrafo(i).getAresta().size() != 0){
-				for(int j = 0; j < grafo.getGrafo(i).getAresta().size(); ++j){
-					System.out.println("No: " + grafo.getGrafo(i).getClassDeclaration().getName() + "  Aresta: " + grafo.getGrafo(i).getAresta().get(j).getNome());
-				}
-			}
-		}*/
 		return null;
 	}
 	
@@ -164,21 +137,5 @@ public class GetInfo extends AbstractHandler {
 		parser.setResolveBindings(true);
 		return (CompilationUnit) parser.createAST(null); // parse
 	}
-	
-	/*private void arestas(){
-		int i = 0;
-		Aresta aresta;
-		while(i < no.size()){
-			if(this.no.get(i).getClassDeclaration().getSuperclassType() != null  && !this.no.get(i).getClassDeclaration().isInterface()){
-				for(int j = 0; j < no.size(); ++j){
-					if(this.no.get(i).getClassDeclaration().getSuperclassType().toString().equals(this.no.get(j).getClassDeclaration().getName().toString())){
-						aresta = new ArestaHeranca();
-						no.get(i).setAresta(aresta);
-						break;
-					}
-				}
-			}
-			++i;
-		}
-	}*/
 }
+ 

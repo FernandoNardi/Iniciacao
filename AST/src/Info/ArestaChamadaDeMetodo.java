@@ -5,12 +5,10 @@ import org.eclipse.jdt.core.dom.MethodInvocation;
 public class ArestaChamadaDeMetodo extends Aresta{
 
 	private MethodInvocation metodoChamado;
-	//private String metodoLocalChamado; //em qual metodo houve a chamada
 	
-	public ArestaChamadaDeMetodo(String nomeClasse, MethodInvocation metodoChamado){//, String metodoLocalChamado){
+	public ArestaChamadaDeMetodo(String nomeClasse, MethodInvocation metodoChamado){
 		super(nomeClasse);
 		this.metodoChamado = metodoChamado;
-		//this.metodoLocalChamado = metodoLocalChamado;
 	}
 
 	public MethodInvocation getMetodoChamado() {
@@ -21,13 +19,8 @@ public class ArestaChamadaDeMetodo extends Aresta{
 		this.metodoChamado = metodoChamado;
 	}
 
-	/*
-	public String getMetodoLocalChamado() {
-		return metodoLocalChamado;
+	@Override
+	public Object getObject() {
+		return this.metodoChamado;
 	}
-
-	public void setMetodoLocalChamado(String metodoLocalChamado) {
-		this.metodoLocalChamado = metodoLocalChamado;
-	}*/
-	
 }

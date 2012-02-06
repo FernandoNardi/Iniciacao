@@ -18,4 +18,9 @@ public class ArestaAssociacao extends Aresta{
 	public void setNomeVariavel(FieldDeclaration nomeVariavel) {
 		this.variavel = nomeVariavel;
 	}
+
+	@Override
+	public Object getObject() {
+		return getNomeVariavel();
+	}
 }

@@ -6,4 +6,10 @@ public class ArestaDeInterface extends Aresta{
 		super(nomeInterface);
 	}
 
+	@Override
+	public Object getObject() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

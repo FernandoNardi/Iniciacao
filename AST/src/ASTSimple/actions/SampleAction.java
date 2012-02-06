@@ -18,6 +18,7 @@ import ASTSimple.handler.GetInfo;
  * delegated to it.
  * @see IWorkbenchWindowActionDelegate
  */
+@SuppressWarnings("unused")
 public class SampleAction implements IWorkbenchWindowActionDelegate {
 	private IWorkbenchWindow window;
 	/**

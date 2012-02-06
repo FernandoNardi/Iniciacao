@@ -1,5 +1,7 @@
 package Info;
 
+import org.eclipse.jdt.core.dom.ClassInstanceCreation;
+
 public abstract class Aresta {
 	
 	private String nome;
@@ -17,5 +19,7 @@ public abstract class Aresta {
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
+	
+	public abstract Object getObject();
 	
 }

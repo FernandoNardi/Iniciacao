@@ -18,5 +18,9 @@ public class ArestaDeInstancia extends Aresta{
 	public void setInstancia(ClassInstanceCreation instancia) {
 		this.instancia = instancia;
 	}
+
+	public Object getObject() {
+		return this.instancia;
+	}
 	
 }
