@@ -117,15 +117,7 @@ public class GetInfo extends AbstractHandler {
 				e.printStackTrace();
 			}
 		}
-		
-		for(int i = 0; i < grafoDS.getGrafo().size(); ++i){
-			for(int j = 0; j < grafoDS.getGrafo(i).getArestas().size(); ++j){
-				//for(int t = 0; t < grafoDS.getGrafo(i).getArestas(t)){
-					System.out.println(grafoDS.getGrafo(i).getArestas(j).getObject());
-				//}
-			}
-		}
-		
+
 		return null;
 	}
 	
