@@ -26,13 +26,11 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 public class GetInfo extends AbstractHandler {
 	
-	private static GrafoDiagramaDeClasse grafoDC = new GrafoDiagramaDeClasse();
-	private static GrafoDiagramaDeSequencia grafoDS = new GrafoDiagramaDeSequencia();
+	private GrafoDiagrama grafo = new GrafoDiagrama();
 	
 	private TypeDeclaration classeDeclaration;
 	private List<MethodDeclaration> metodoDeclaration;
-	private List<Aresta> arestasDC;
-	private List<Aresta> arestasDS;
+	private List<Aresta> arestas;
 	
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		
@@ -41,6 +39,8 @@ public class GetInfo extends AbstractHandler {
 		
 		// Obter todos os projetos na área de trabalho
 		IProject[] projects = root.getProjects();
+		
+		
 		
 		// Loop sobre todos os projetos
 		for (IProject project : projects) {
@@ -67,17 +67,17 @@ public class GetInfo extends AbstractHandler {
 								parse.accept(instanceVisitor);
 								
 								metodoDeclaration = new ArrayList<MethodDeclaration>();
-								arestasDC = new ArrayList<Aresta>();
-								arestasDS = new ArrayList<Aresta>();
+								arestas = new ArrayList<Aresta>();
 								
-								for (TypeDeclaration classe : classVisitor.getClasses()){																
+								for (TypeDeclaration classe : classVisitor.getClasses()){
 									if(classe.getSuperclassType() != null){
-										arestasDC.add(new ArestaHeranca(classe.getSuperclassType().toString()));
+										arestas.add(new ArestaHeranca(classe.getSuperclassType().toString()));
 									}//aresta de herança -->>> extends
+									System.out.println("classe: " + classe.getName());
 									
 									int i = 0;
 									while(i < classe.superInterfaceTypes().size()){
-										arestasDC.add(new ArestaDeInterface(classe.superInterfaceTypes().get(i).toString()));
+										arestas.add(new ArestaDeInterface(classe.superInterfaceTypes().get(i).toString()));
 										++i;
 									}//aresta de inteface --->>> implements
 									
@@ -85,7 +85,7 @@ public class GetInfo extends AbstractHandler {
 									for(FieldDeclaration declaration : declarationVisitor.getDeclarations()){
 										if(!declaration.getType().isPrimitiveType()){
 											if(!(declaration.getType().toString()).equals("String")){
-												arestasDC.add(new ArestaAssociacao(declaration.getType().toString(), declaration));
+												arestas.add(new ArestaAssociacao(declaration.getType().toString(), declaration));
 											}
 										}
 									}// aresta de associação     
@@ -97,16 +97,14 @@ public class GetInfo extends AbstractHandler {
 									}
 									
 									for(ClassInstanceCreation instanceCreation : instanceVisitor.getInstances()){
-										arestasDS.add(new ArestaDeInstancia(instanceCreation.getType().toString(), instanceCreation));
+										arestas.add(new ArestaDeInstancia(instanceCreation.getType().toString(), instanceCreation));
 									}
 									
 									for(MethodInvocation methodInvocation : methodInvocationVisitor.getMethodsInvocations()){
-										arestasDS.add(new ArestaChamadaDeMetodo(methodInvocation.getName().toString(), methodInvocation));
+										arestas.add(new ArestaChamadaDeMetodo(methodInvocation.resolveMethodBinding().getDeclaringClass().getName().toString(), methodInvocation));
 									}
 									
-									grafoDC.setGrafo(new DiagramaDeClasse(classeDeclaration, metodoDeclaration, arestasDC));
-									grafoDS.setGrafo(new DiagramaDeSequencia(arestasDS));
-									
+									grafo.setGrafo(new Diagrama(classeDeclaration, metodoDeclaration, arestas));
 								}
 							}
 						}
@@ -116,6 +114,9 @@ public class GetInfo extends AbstractHandler {
 			catch (CoreException e){
 				e.printStackTrace();
 			}
+			
+			GrafoVisitor t = new GrafoVisitor(grafo);
+			
 		}
 
 		return null;

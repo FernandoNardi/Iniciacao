@@ -4,15 +4,15 @@ import java.util.List;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
-public class DiagramaDeClasse {
+public class Diagrama {
 	
 	private TypeDeclaration classDeclaration;
 	private List<MethodDeclaration> methodDeclaration;
 	private List<Aresta> arestas;
 	
-	public DiagramaDeClasse(){} //Construtor default
+	public Diagrama(){} //Construtor default
 	
-	public DiagramaDeClasse(TypeDeclaration c, List<MethodDeclaration> m, List<Aresta> a){
+	public Diagrama(TypeDeclaration c, List<MethodDeclaration> m, List<Aresta> a){
 		setClassDeclaration(c);
 		setMethodDeclaration(m);
 		setAresta(a);
